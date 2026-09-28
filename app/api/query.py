@@ -11,4 +11,4 @@ semantic_search = SemanticSearch()
 
 @router.get("/query")
 async def query(query: Annotated[QueryRequest, Query()]):
-    return await semantic_search.search(query.search, query.operator)
+    return await semantic_search.search(query.search, query.operator, query.normalize_embeddings)

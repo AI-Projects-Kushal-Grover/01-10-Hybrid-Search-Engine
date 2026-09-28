@@ -7,10 +7,12 @@ class Document(BaseModel):
     content: str = Field()
     chunk_size: int = Field(default=400)
     chunk_overlap: int = Field(default=50)
+    normalize_embeddings: bool = Field(default=True)
 
 class QueryRequest(BaseModel):
     search: str = Field()
     operator: Literal["<->", "<=>", "<#>"]
+    normalize_embeddings: bool = Field(default=True)
 
 class DocumentResult(BaseModel):
     title: str = Field()

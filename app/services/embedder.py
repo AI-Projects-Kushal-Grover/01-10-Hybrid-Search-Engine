@@ -8,5 +8,5 @@ class Embedder():
     def __init__(self) -> None:
         self.embedding_model = SentenceTransformer(EMBEDDING_MODEL)
 
-    def embed(self, chunks: List[str]) -> list[list[float]]:
-        return self.embedding_model.encode(chunks, normalize_embeddings=True).tolist()
+    def embed(self, chunks: List[str], normalize_embeddings = True) -> list[list[float]]:
+        return self.embedding_model.encode(chunks, normalize_embeddings=normalize_embeddings).tolist()
