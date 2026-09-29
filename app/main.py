@@ -12,11 +12,15 @@ from app.infrastructure.database import Database
 from app.api.documents import router as document_router
 from app.api.query import router as query_router
 from app.repositories.document_chunk import DocumentChunkRepository
+from app.services.keyword_search import KeywordSearch
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     document_chunk_repo = DocumentChunkRepository()
     await document_chunk_repo.create_table_if_not_exists()
+
+    keyword_search = KeywordSearch()
+    await keyword_search.index_keywords()
     yield
 
 app = FastAPI(

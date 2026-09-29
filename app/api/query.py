@@ -3,12 +3,12 @@ from typing import Annotated
 from fastapi import APIRouter, Query
 
 from app.domain.models import QueryRequest
-from app.services.semantic_search import SemanticSearch
+from app.handlers.query_handler import QueryHandler
 
 router = APIRouter()
 
-semantic_search = SemanticSearch()
+query_handler = QueryHandler()
 
 @router.get("/query")
 async def query(query: Annotated[QueryRequest, Query()]):
-    return await semantic_search.search(query.search, query.operator, query.normalize_embeddings)
+    return await query_handler.search(query)

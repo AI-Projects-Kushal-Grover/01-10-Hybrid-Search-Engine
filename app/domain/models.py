@@ -15,9 +15,10 @@ class QueryRequest(BaseModel):
     normalize_embeddings: bool = Field(default=True)
 
 class DocumentResult(BaseModel):
+    id: int = Field()
     title: str = Field()
     content: str = Field()
-    distance: float = Field()
+    distance: float | None = Field(default=None)
 
 class QueryResult(BaseModel):
     documents: List[DocumentResult]

@@ -41,8 +41,8 @@ class DocumentChunkRepository():
             (vector_store.title, vector_store.content, vector_store.embedding)
         )
 
-    async def select(self, embedding: List[float], operator: str, limit = 5):
-        query = sql.SQL("SELECT title, content, (embedding {op} %s::vector) as distance FROM {table} ORDER BY distance LIMIT %s").format(
+    async def select_by_embeddings(self, embedding: List[float], operator: str, limit = 5):
+        query = sql.SQL("SELECT id, title, content, (embedding {op} %s::vector) as distance FROM {table} ORDER BY distance LIMIT %s").format(
             table=sql.Identifier(self.table_name),
             op=sql.SQL(cast(LiteralString, operator))
         )
@@ -50,6 +50,13 @@ class DocumentChunkRepository():
             query,
             (embedding, limit)
         )
+        return await results.fetchall()
+
+    async def select_all(self):
+        query = sql.SQL("SELECT id, title, content FROM {table}").format(
+            table=sql.Identifier(self.table_name),
+        )
+        results = await database.execute(query)
         return await results.fetchall()
 
     def _compose_query(self, query) -> sql.Composed:
