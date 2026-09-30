@@ -4,6 +4,7 @@ from typing import List, cast, LiteralString
 
 from psycopg import sql
 
+from app.domain.models import Operator
 from app.infrastructure.database import Database
 from app.domain.entities import DocumentChunk
 
@@ -41,7 +42,7 @@ class DocumentChunkRepository():
             (vector_store.title, vector_store.content, vector_store.embedding)
         )
 
-    async def select_by_embeddings(self, embedding: List[float], operator: str, limit = 5):
+    async def select_by_embeddings(self, embedding: List[float], operator: Operator, limit = 5):
         query = sql.SQL("SELECT id, title, content, (embedding {op} %s::vector) as distance FROM {table} ORDER BY distance LIMIT %s").format(
             table=sql.Identifier(self.table_name),
             op=sql.SQL(cast(LiteralString, operator))

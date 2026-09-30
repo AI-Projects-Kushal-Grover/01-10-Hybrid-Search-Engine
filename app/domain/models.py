@@ -2,6 +2,9 @@ from typing import List, Literal
 
 from pydantic import Field, BaseModel
 
+Operator = Literal["<->", "<=>", "<#>"]
+MergeStrategy = Literal["candidiate_merging", "score_normalization", "rrf"]
+
 class Document(BaseModel):
     title: str = Field(max_length=200)
     content: str = Field()
@@ -11,8 +14,9 @@ class Document(BaseModel):
 
 class QueryRequest(BaseModel):
     search: str = Field()
-    operator: Literal["<->", "<=>", "<#>"]
+    operator: Operator = Field(default="<->")
     normalize_embeddings: bool = Field(default=True)
+    merge_strategy: MergeStrategy = Field(default="candidiate_merging")
 
 class DocumentResult(BaseModel):
     id: int = Field()

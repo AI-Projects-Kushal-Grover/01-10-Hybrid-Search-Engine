@@ -17,7 +17,7 @@ class KeywordSearch():
             self.document_corpus.append((*document, formatted))
         self.retriever = BM25.index(corpus)
 
-    def search(self, query: str, limit = 5) -> QueryResult:
+    def search(self, query: str, limit = 5) -> list[DocumentResult]:
         if (self.retriever is None):
             raise AttributeError("Value is not initalized yet", name="retriever")
 
@@ -26,4 +26,4 @@ class KeywordSearch():
         for result in results[0]:
             document = list(filter(lambda doc: doc[3] == result["document"], self.document_corpus))[0]
             documents.append(DocumentResult(id = document[0], title=document[1], content=document[2], distance=result["score"]))
-        return QueryResult(documents=documents)
+        return documents
