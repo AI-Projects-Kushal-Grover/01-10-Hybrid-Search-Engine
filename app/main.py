@@ -8,18 +8,14 @@ from fastapi import FastAPI
 env_file = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(env_file)
 
-from app.infrastructure.database import Database
 from app.api.documents import router as document_router
 from app.api.query import router as query_router
-from app.repositories.document_chunk import DocumentChunkRepository
-from app.services.keyword_search import KeywordSearch
+from app.services import keyword_search
+from app.repositories import document_chunk_repository
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    document_chunk_repo = DocumentChunkRepository()
-    await document_chunk_repo.create_table_if_not_exists()
-
-    keyword_search = KeywordSearch()
+    await document_chunk_repository.create_table_if_not_exists()
     await keyword_search.index_keywords()
     yield
 

@@ -1,16 +1,15 @@
 import BM25
 
-from app.domain.models import Document, DocumentResult, QueryResult
-from app.repositories.document_chunk import DocumentChunkRepository
+from app.domain.models import DocumentResult, QueryResult
+from app.repositories import document_chunk_repository
 
 class KeywordSearch():
     def __init__(self) -> None:
-        self.document_chunk_repository = DocumentChunkRepository()
         self.retriever: BM25.BM25Search | None = None
         self.document_corpus: list[tuple] = []
 
     async def index_keywords(self):
-        document_chunks = await self.document_chunk_repository.select_all()
+        document_chunks = await document_chunk_repository.select_all()
         corpus: list[str] = []
         for document in document_chunks:
             formatted = f"{document[1]} {document[2]}"
@@ -24,7 +23,7 @@ class KeywordSearch():
 
         documents = []
         results = self.retriever.search([query], k=limit)
-        for result in results:
-            document = list(filter(lambda doc: doc[3] == result, self.document_corpus))[0]
-            documents.append(document)
+        for result in results[0]:
+            document = list(filter(lambda doc: doc[3] == result["document"], self.document_corpus))[0]
+            documents.append(DocumentResult(id = document[0], title=document[1], content=document[2], distance=result["score"]))
         return QueryResult(documents=documents)
