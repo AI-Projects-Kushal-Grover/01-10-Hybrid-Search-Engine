@@ -25,5 +25,5 @@ class KeywordSearch():
         results = self.retriever.search([query], k=limit)
         for result in results[0]:
             document = list(filter(lambda doc: doc[3] == result["document"], self.document_corpus))[0]
-            documents.append(DocumentResult(id = document[0], title=document[1], content=document[2], distance=result["score"]))
+            documents.append(DocumentResult(id = document[0], title=document[1], content=document[2], bm25_score=result["score"]))
         return documents

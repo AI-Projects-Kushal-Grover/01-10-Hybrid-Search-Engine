@@ -21,5 +21,5 @@ class SemanticSearch():
     async def search(self, query: str, operator: Operator, normalize_embeddings: bool = True) -> list[DocumentResult]:
         query_embedding = self.embedder.embed([query], normalize_embeddings)
         document_chunks = await document_chunk_repository.select_by_embeddings(query_embedding[0], operator)
-        documents = [DocumentResult(id = document[0], title=document[1], content=document[2], distance=document[3]) for document in document_chunks]
+        documents = [DocumentResult(id = document[0], title=document[1], content=document[2], semantic_score=document[3]) for document in document_chunks]
         return documents
