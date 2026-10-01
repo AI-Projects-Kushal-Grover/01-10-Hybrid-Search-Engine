@@ -7,7 +7,7 @@ class RRFMergeStrategy:
     def merge(results_semantic: list[DocumentResult], results_keywords: list[DocumentResult]) -> list[DocumentResult]:
         merged_results = {}
         for result_list in [results_semantic, results_keywords]:
-            for rank, result in enumerate(result_list):
+            for rank, result in enumerate(result_list, start=1):
                 if result.id not in merged_results:
                     merged_results[result.id] = {
                         "result": result,
@@ -18,4 +18,8 @@ class RRFMergeStrategy:
         sorted_results = sorted(
             merged_results.values(), key=lambda x: x["score"], reverse=True
         )
+
+        for item in sorted_results:
+            item["result"].hybrid_score = item["score"]
+
         return [item["result"] for item in sorted_results]
